@@ -56,7 +56,7 @@ def process_stream(spark):
     # Chúng ta chỉ chọn các trường cơ bản:
     
     parsed_stream = df_string.withColumn(
-        "json_data", 
+        "json_data",
         from_json(col("value"), raw_schema) # Đây là bước phức tạp, cần schema chính xác của TỪNG nguồn
     )
     
