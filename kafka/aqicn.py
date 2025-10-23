@@ -17,7 +17,7 @@ KAFKA_TOPIC = 'air-quality-raw'
 
 # Khoảng thời gian giữa các lần gọi API (tính bằng giây)
 # AQICN cập nhật mỗi giờ, nên 3600 giây là hợp lý
-API_CALL_INTERVAL_SECONDS = 3600 
+API_CALL_INTERVAL_SECONDS = 3600
 
 # --- 2. HÀM GỌI API VÀ LẤY DỮ LIỆU ---
 
