@@ -37,6 +37,9 @@ AQICN API → Kafka → Spark Streaming → TimescaleDB/MinIO → FastAPI → Gr
 ---
 
 ## Kiến Trúc Hệ Thống
+![Kiến trúc hệ thống (Kappa Architecture)](./img/architecture.png)
+
+*Hình 1 — Sơ đồ tổng quan kiến trúc. Nếu cần thêm góc nhìn khác, có thể đặt thêm ảnh vào thư mục `img` (ví dụ: `kappa_flow.png`, `deployment.png`) và chèn tương tự.*
 
 ### Kappa Architecture
 
