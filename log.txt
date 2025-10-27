@@ -1,3 +1,4 @@
 Refine frontend layout
 Update routing logic
 Improve UI responsiveness
+Clean up unused components
