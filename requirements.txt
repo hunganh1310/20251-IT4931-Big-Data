@@ -1,0 +1,24 @@
+# Core dependencies
+kafka-python==2.0.2
+requests==2.31.0
+python-dotenv==1.0.0
+
+# Data processing (for future Spark work)
+pyspark==3.5.0
+
+# Data analysis and manipulation
+pandas==2.1.0
+numpy==1.26.0
+
+# Database connectivity
+psycopg2-binary==2.9.9
+
+# Object storage
+minio==7.2.0
+
+# Testing
+pytest==7.4.3
+
+# Code quality
+black==23.11.0
+flake8==6.1.0
