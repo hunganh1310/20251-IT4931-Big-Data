@@ -5,6 +5,7 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 from ..common import logger, settings
+from ..schemas import aqicn_schema
 
 
 def get_spark_session() -> SparkSession:
@@ -19,46 +20,8 @@ def get_spark_session() -> SparkSession:
 
 
 def define_schema() -> StructType:
-    return StructType([
-        StructField("city", StringType(), True),
-        StructField("payload", StructType([
-            StructField("aqi", IntegerType(), True),
-            StructField("idx", IntegerType(), True),
-            StructField("dominentpol", StringType(), True),
-            StructField("iaqi", StructType([
-                StructField("pm25", StructType([
-                    StructField("v", DoubleType(), True)
-                ]), True),
-                StructField("pm10", StructType([
-                    StructField("v", DoubleType(), True)
-                ]), True),
-                StructField("o3", StructType([
-                    StructField("v", DoubleType(), True)
-                ]), True),
-                StructField("no2", StructType([
-                    StructField("v", DoubleType(), True)
-                ]), True),
-                StructField("t", StructType([
-                    StructField("v", DoubleType(), True)
-                ]), True),
-                StructField("h", StructType([
-                    StructField("v", DoubleType(), True)
-                ]), True)
-            ]), True),
-            StructField("time", StructType([
-                StructField("s", StringType(), True),
-                StructField("tz", StringType(), True),
-                StructField("v", IntegerType(), True)
-            ]), True),
-            StructField("city", StructType([
-                StructField("name", StringType(), True),
-                StructField("geo", StructType([
-                    StructField("0", DoubleType(), True),
-                    StructField("1", DoubleType(), True)
-                ]), True)
-            ]), True)
-        ]), True)
-    ])
+    """Get AQICN schema from centralized schemas module"""
+    return aqicn_schema()
 
 
 def read_from_kafka(spark: SparkSession) -> DataFrame:
