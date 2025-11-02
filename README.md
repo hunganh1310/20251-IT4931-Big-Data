@@ -6,7 +6,7 @@
 ### HUST_IT4931
 **Đại học Bách Khoa Hà Nội**  
 **Môn học:** Lưu trữ và xử lý dữ liệu lớn  
-**Nhóm:** 
+**Nhóm: 4** 
 
 ---
 
