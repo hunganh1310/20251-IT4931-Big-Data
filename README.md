@@ -24,15 +24,16 @@ Hệ thống giám sát và dự báo chất lượng không khí thời gian th
 ### Pipeline Tổng Quan
 ```
 AQICN API → Kafka → Spark Streaming → TimescaleDB/MinIO → FastAPI → Grafana
+OpenAQ API  → Kafka →     ↑ Joint Processing
 ```
 
 ---
 
 ## Nguồn Dữ Liệu
 
-- **AQICN API** (chính): 67+ trạm VN, cập nhật mỗi giờ 
-- **OpenAQ**: Cross-validation 
-- **Open-Meteo**: Weather & forecast data 
+- **AQICN API** (chính): 67+ trạm VN, cập nhật mỗi giờ, dữ liệu thời gian thực với AQI và các chất ô nhiễm
+- **OpenAQ**: Cross-validation và metadata bổ sung cho các trạm monitoring
+- **Open-Meteo**: Weather & forecast data (dự kiến triển khai) 
 
 ---
 
@@ -51,27 +52,30 @@ AQICN API → Kafka → Spark Streaming → TimescaleDB/MinIO → FastAPI → Gr
 
 ```
 ┌─────────────────────┐
-│   Data Sources      │  AQICN, OpenAQ, Weather APIs
+│   Data Sources      │  AQICN API (real-time) + OpenAQ API (metadata)
 └──────────┬──────────┘
            ↓
 ┌─────────────────────┐
-│  Python Producers   │  Thu thập & validate
+│  Python Producers   │  produce_aqicn.py + produce_openaq.py
 └──────────┬──────────┘
            ↓
 ┌─────────────────────┐
-│   Kafka Topics      │  4 topics: raw, weather, enriched, alerts
+│   Kafka Topics      │  raw.airquality + raw.openaq
 └──────────┬──────────┘
            ↓
 ┌─────────────────────┐
-│  Spark Streaming    │  Cleaning, aggregation, ML, alerting
+│  Spark Streaming    │  • Individual: spark_stream_aqicn.py, spark_stream_openaq.py
+│                     │  • Joint: spark_stream_joint.py (spatial join + enrichment)
 └──────────┬──────────┘
            ↓
 ┌─────────────────────┐
-│  Storage Layer      │  MinIO (raw) + TimescaleDB (metrics)
+│  Storage Layer      │  • aqicn_measurements (individual)
+│                     │  • air_quality_enriched (joint/enriched)
+│                     │  • MinIO (cold storage)
 └──────────┬──────────┘
            ↓
 ┌─────────────────────┐
-│  FastAPI + Grafana  │  Dashboard & API
+│  FastAPI + Grafana  │  Dashboard & API (dự kiến)
 └─────────────────────┘
 ```
 
@@ -91,8 +95,21 @@ AQICN API → Kafka → Spark Streaming → TimescaleDB/MinIO → FastAPI → Gr
 
 ---
 
-## Machine Learning
+## Data Processing Features
 
+### Streaming Architecture
+- **Individual Streams**: Xử lý riêng biệt cho từng nguồn dữ liệu (AQICN, OpenAQ)
+- **Joint Stream Processing**: Kết hợp dữ liệu từ nhiều nguồn với spatial join và temporal correlation
+- **Geo-spatial Bucketing**: Nhóm trạm theo vị trí địa lý với độ chính xác ~1km
+- **Real-time AQI Calculation**: Tính toán AQI theo chuẩn US EPA cho PM2.5 và PM10
+
+### Data Enrichment
+- **Spatial Join**: Kết hợp dữ liệu từ các trạm gần nhau (cùng lat/lon bucket)
+- **Temporal Correlation**: Join dữ liệu trong cửa sổ thời gian 5 phút
+- **Missing Data Handling**: Fallback giữa các nguồn dữ liệu
+- **Standardized Schema**: Chuẩn hóa schema chung cho tất cả nguồn dữ liệu
+
+### Machine Learning (Dự kiến)
 - **Model:** XGBoost (R² = 0.94-0.97)
 - **Features:** Lag values, rolling stats, time patterns, weather data
 - **Anomaly Detection:** Isolation Forest (real-time), LSTM Autoencoder (accuracy cao)
@@ -116,15 +133,34 @@ AQICN API → Kafka → Spark Streaming → TimescaleDB/MinIO → FastAPI → Gr
 
 ---
 
-## Implementation Timeline
+## Implementation Status
 
+### ✅ Đã Hoàn Thành
+| Component | Status | Description |
+|-----------|--------|-------------|
+| **Data Ingestion** | ✅ | AQICN & OpenAQ producers với Kafka |
+| **Individual Streaming** | ✅ | Spark streams cho từng nguồn dữ liệu |
+| **Joint Processing** | ✅ | Spatial & temporal join với data enrichment |
+| **Database Schema** | ✅ | TimescaleDB với hypertables |
+| **Infrastructure** | ✅ | Docker Compose setup |
+
+### 🚧 Đang Phát Triển
+| Component | Priority | Timeline |
+|-----------|----------|----------|
+| **Cold Storage** | High | Week 7-8 |
+| **ML Pipeline** | Medium | Week 8-9 |
+| **Dashboard & API** | High | Week 9-10 |
+| **Monitoring & Alerting** | Medium | Week 10-11 |
+
+### 📋 Implementation Timeline
 | Phase | Duration | Deliverables |
 |-------|----------|--------------|
-| **1. Foundation** | Week 1-2 | Kafka + data ingestion |
-| **2. Processing** | Week 3-4 | Spark streaming + DB |
-| **3. ML** | Week 5-6 | Forecast models |
-| **4. Visualization** | Week 7-8 | Dashboard + API |
-| **5. Documentation** | Week 9-10 | Report + demo |
+| **1. Foundation** | ✅ Week 1-2 | Kafka + data ingestion |
+| **2. Processing** | ✅ Week 3-4 | Individual + joint streaming |
+| **3. Storage** | 🚧 Week 5-6 | Cold storage + optimization |
+| **4. ML & Analytics** | 🔄 Week 7-8 | Forecast models + anomaly detection |
+| **5. Visualization** | 📋 Week 9-10 | Dashboard + API |
+| **6. Production** | 📋 Week 11-12 | Deployment + monitoring |
 
 ---
 
@@ -136,4 +172,44 @@ AQICN API → Kafka → Spark Streaming → TimescaleDB/MinIO → FastAPI → Gr
 
 ---
 
-**Status:** In Development
+## File Structure & Components
+
+```
+├── src/
+│   ├── common/
+│   │   ├── config.py              # Configuration management & logging
+│   │   └── __init__.py
+│   ├── ingestion/
+│   │   ├── api_client.py          # Generic API client wrapper
+│   │   ├── producer.py            # Kafka producer wrapper
+│   │   └── __init__.py
+│   └── processing/
+│       ├── spark_stream_aqicn.py  # Individual AQICN stream processing
+│       ├── spark_stream_openaq.py # Individual OpenAQ stream processing
+│       ├── spark_stream_joint.py  # 🆕 Joint processing với spatial join
+│       ├── cold_storage_aqicn.py  # Batch processing for AQICN
+│       ├── cold_storage_openaq.py # Batch processing for OpenAQ
+│       └── __init__.py
+├── scripts/
+│   ├── produce_aqicn.py           # AQICN data producer
+│   ├── produce_openaq.py          # OpenAQ data producer
+│   ├── run_spark_aqicn.py         # Execute individual AQICN streaming
+│   ├── run_spark_openaq.py        # Execute individual OpenAQ streaming
+│   ├── run_spark_streaming.py     # Execute joint streaming (main)
+│   ├── run_cold_storage_aqicn.py  # Execute AQICN batch processing
+│   └── run_cold_storage_openaq.py # Execute OpenAQ batch processing
+├── docker-compose.yaml            # Infrastructure setup
+├── requirements.txt               # Python dependencies
+└── README.md                      # Project documentation
+```
+
+### Key Features của Joint Processing
+- **Spatial Bucketing**: Nhóm trạm theo lat/lon với precision 2 decimal (~1km)
+- **Temporal Window**: Join dữ liệu trong cửa sổ 5 phút
+- **Unified Schema**: Chuẩn hóa output từ nhiều nguồn khác nhau
+- **AQI Auto-calculation**: Tự động tính AQI theo EPA standard nếu source không có
+- **Fallback Logic**: Ưu tiên dữ liệu AQICN, fallback sang OpenAQ khi cần
+
+---
+
+**Status:** Core streaming architecture hoàn thành, đang phát triển ML và dashboard
