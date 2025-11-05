@@ -67,9 +67,28 @@ Rewrite all commits to use the correct email. This is **not recommended** becaus
 ✅ Documentation updated
 
 **Next Steps for Hieu1607:**
-1. Try Solution 1 if possible (add email to GitHub account)
-2. If the email is fake/unreachable, consider history rewriting with team consensus
-3. For future commits, use properly configured git (see CONTRIBUTING.md)
+
+### IMMEDIATE ACTION REQUIRED:
+
+**Option A: Add the email to your GitHub account (If you have access to hieu@example.com)**
+1. Go to https://github.com/settings/emails
+2. Add `hieu@example.com`
+3. Verify it via the confirmation email
+4. Wait 24-48 hours for GitHub to reindex
+
+**Option B: If hieu@example.com is not a real email:**
+1. Contact the repository maintainer (hunganh1310)
+2. Discuss rewriting commit history as a team
+3. All team members must agree and coordinate the rebase
+4. This will require force-pushing to main (disruptive but necessary)
+
+**For Future Commits (IMPORTANT):**
+- Configure git BEFORE making commits:
+  ```bash
+  git config user.name "Hieu1607"
+  git config user.email "164389040+Hieu1607@users.noreply.github.com"
+  ```
+- See CONTRIBUTING.md for detailed setup instructions
 
 ## Verification
 

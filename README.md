@@ -164,6 +164,17 @@ OpenAQ API  → Kafka →     ↑ Joint Processing
 
 ---
 
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:
+- Setting up your Git identity properly
+- Ensuring your contributions are attributed to your GitHub account
+- Making pull requests
+
+**Important**: Configure your Git email before making commits to ensure proper attribution!
+
+---
+
 ## Resources
 
 - **Development:** Minikube (local, free)
