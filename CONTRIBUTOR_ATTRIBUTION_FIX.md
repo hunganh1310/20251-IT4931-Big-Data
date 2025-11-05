@@ -77,7 +77,7 @@ Rewrite all commits to use the correct email. This is **not recommended** becaus
 4. Wait 24-48 hours for GitHub to reindex
 
 **Option B: If hieu@example.com is not a real email:**
-1. Contact the repository maintainer (hunganh1310)
+1. Contact the repository maintainer
 2. Discuss rewriting commit history as a team
 3. All team members must agree and coordinate the rebase
 4. This will require force-pushing to main (disruptive but necessary)
@@ -99,7 +99,7 @@ After implementing a solution, verify with:
 git shortlog -sn main
 
 # GitHub verification
-# Check https://github.com/hunganh1310/20251-IT4931-Big-Data/graphs/contributors
+# Check the repository's contributor graph on GitHub
 ```
 
 ## Prevention
