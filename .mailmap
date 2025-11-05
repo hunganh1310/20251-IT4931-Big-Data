@@ -1,0 +1,5 @@
+# This file maps commit author emails to the correct GitHub accounts
+# Format: Proper Name <proper@email.com> <commit@email.com>
+
+# Map Hieu1607's placeholder email to GitHub noreply email
+Hieu1607 <164389040+Hieu1607@users.noreply.github.com> <hieu@example.com>
