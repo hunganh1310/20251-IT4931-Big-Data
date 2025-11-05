@@ -5,6 +5,7 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 from ..common import logger, settings
+from ..schemas import openaq_schema
 
 
 def get_spark_session() -> SparkSession:
@@ -19,57 +20,8 @@ def get_spark_session() -> SparkSession:
 
 
 def define_schema() -> StructType:
-    return StructType([
-        StructField("country", StringType(), True),
-        StructField("parameter", StringType(), True),
-        StructField("data", StructType([
-            StructField("meta", StructType([
-                StructField("name", StringType(), True),
-                StructField("page", IntegerType(), True),
-                StructField("limit", IntegerType(), True),
-                StructField("found", StringType(), True)
-            ]), True),
-            StructField("results", ArrayType(
-                StructType([
-                    StructField("id", IntegerType(), True),
-                    StructField("name", StringType(), True),
-                    StructField("locality", StringType(), True),
-                    StructField("timezone", StringType(), True),
-                    StructField("country", StructType([
-                        StructField("id", IntegerType(), True),
-                        StructField("code", StringType(), True),
-                        StructField("name", StringType(), True)
-                    ]), True),
-                    StructField("isMobile", BooleanType(), True),
-                    StructField("isMonitor", BooleanType(), True),
-                    StructField("sensors", ArrayType(
-                        StructType([
-                            StructField("id", IntegerType(), True),
-                            StructField("name", StringType(), True),
-                            StructField("parameter", StructType([
-                                StructField("id", IntegerType(), True),
-                                StructField("name", StringType(), True),
-                                StructField("units", StringType(), True),
-                                StructField("displayName", StringType(), True)
-                            ]), True)
-                        ])
-                    ), True),
-                    StructField("coordinates", StructType([
-                        StructField("latitude", DoubleType(), True),
-                        StructField("longitude", DoubleType(), True)
-                    ]), True),
-                    StructField("datetimeFirst", StructType([
-                        StructField("utc", StringType(), True),
-                        StructField("local", StringType(), True)
-                    ]), True),
-                    StructField("datetimeLast", StructType([
-                        StructField("utc", StringType(), True),
-                        StructField("local", StringType(), True)
-                    ]), True)
-                ])
-            ), True)
-        ]), True)
-    ])
+    """Get OpenAQ schema from centralized schemas module"""
+    return openaq_schema()
 
 
 def read_from_kafka(spark: SparkSession) -> DataFrame:

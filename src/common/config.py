@@ -39,6 +39,7 @@ class Settings:
     minio_user: str
     minio_password: str
     minio_bucket: str
+    spark_checkpoint_location: str
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -56,6 +57,7 @@ class Settings:
         minio_user = os.getenv("MINIO_ROOT_USER", "minioadmin")
         minio_password = os.getenv("MINIO_ROOT_PASSWORD", "minioadmin")
         minio_bucket = os.getenv("MINIO_BUCKET", "airquality")
+        spark_checkpoint_location = os.getenv("SPARK_CHECKPOINT_LOCATION", "/tmp/spark_checkpoints")
         return cls(
             aqicn_token=aqicn_token,
             openaq_api_key=openaq_api_key,
@@ -70,7 +72,8 @@ class Settings:
             minio_endpoint=minio_endpoint,
             minio_user=minio_user,
             minio_password=minio_password,
-            minio_bucket=minio_bucket
+            minio_bucket=minio_bucket,
+            spark_checkpoint_location=spark_checkpoint_location
         )
 
     def require_token(self) -> str:
