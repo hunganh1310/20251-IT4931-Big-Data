@@ -121,7 +121,7 @@ def compute_aqi_single(pm25_val, pm10_val):
                     aqi_p = _linear_interpolate(c, cl, ch, il, ih)
                     results.append(int(round(aqi_p)))
                     break
-        except Exception:
+        except (ValueError, TypeError):
             pass
     if pm10_val is not None:
         try:
@@ -131,7 +131,7 @@ def compute_aqi_single(pm25_val, pm10_val):
                     aqi_p = _linear_interpolate(c, cl, ch, il, ih)
                     results.append(int(round(aqi_p)))
                     break
-        except Exception:
+        except (ValueError, TypeError):
             pass
     if not results:
         return None
