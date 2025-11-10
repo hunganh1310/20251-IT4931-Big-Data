@@ -3,3 +3,4 @@ Update routing logic
 Improve UI responsiveness
 Clean up unused components
 Adjust API integration
+Fix minor UI issues
