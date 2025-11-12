@@ -37,7 +37,7 @@ class AirQualityAPIClient:
         if self.token:
             request_params["token"] = self.token
 
-        logger.info("Fetching from %s with params %s", url, request_params)
+        logger.info("Fetching from %s", url)
         response = self._session.get(url, params=request_params, timeout=self.timeout)
 
         if response.status_code != 200:

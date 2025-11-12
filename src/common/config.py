@@ -26,10 +26,8 @@ def _build_logger(name: str = "bigdata") -> logging.Logger:
 @dataclass
 class Settings:
     aqicn_token: str
-    openaq_api_key: str
     kafka_bootstrap_servers: str
     aqicn_topic: str
-    openaq_topic: str
     db_host: str
     db_port: int
     db_name: str
@@ -44,10 +42,8 @@ class Settings:
     @classmethod
     def from_env(cls) -> "Settings":
         aqicn_token = os.getenv("AQICN_TOKEN")
-        openaq_api_key = os.getenv("OPENAQ_API_KEY")
         bootstrap = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:29092")
         aqicn_topic = os.getenv("AQICN_TOPIC", "raw.airquality")
-        openaq_topic = os.getenv("OPENAQ_TOPIC", "raw.openaq")
         db_host = os.getenv("DB_HOST", "localhost")
         db_port = int(os.getenv("DB_PORT", "5432"))
         db_name = os.getenv("DB_NAME", "airquality")
@@ -60,10 +56,8 @@ class Settings:
         spark_checkpoint_location = os.getenv("SPARK_CHECKPOINT_LOCATION", "/tmp/spark_checkpoints")
         return cls(
             aqicn_token=aqicn_token,
-            openaq_api_key=openaq_api_key,
             kafka_bootstrap_servers=bootstrap,
             aqicn_topic=aqicn_topic,
-            openaq_topic=openaq_topic,
             db_host=db_host,
             db_port=db_port,
             db_name=db_name,
