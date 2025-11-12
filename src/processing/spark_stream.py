@@ -4,11 +4,7 @@ from pyspark.sql.types import StructType, StructField, StringType, IntegerType, 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
-<<<<<<< Updated upstream:src/processing/spark_stream_aqicn.py
-from ..common import logger, settings
-=======
 from src.common import logger, settings
->>>>>>> Stashed changes:src/processing/spark_stream.py
 
 
 def get_spark_session() -> SparkSession:
