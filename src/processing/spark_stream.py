@@ -4,7 +4,11 @@ from pyspark.sql.types import StructType, StructField, StringType, IntegerType, 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
+<<<<<<< Updated upstream:src/processing/spark_stream_aqicn.py
 from ..common import logger, settings
+=======
+from src.common import logger, settings
+>>>>>>> Stashed changes:src/processing/spark_stream.py
 
 
 def get_spark_session() -> SparkSession:
@@ -61,11 +65,11 @@ def define_schema() -> StructType:
     ])
 
 
-def read_from_kafka(spark: SparkSession) -> DataFrame:
+def read_from_kafka(spark: SparkSession, city: str) -> DataFrame:
     df = spark.readStream \
         .format("kafka") \
         .option("kafka.bootstrap.servers", settings.kafka_bootstrap_servers) \
-        .option("subscribe", settings.aqicn_topic) \
+        .option("subscribe", f"{settings.aqicn_topic}.{city}") \
         .option("startingOffsets", "earliest") \
         .load()
 
@@ -100,7 +104,7 @@ def parse_data(df_raw: DataFrame, schema: StructType) -> DataFrame:
     return df_clean
 
 
-def create_table():
+def create_table(city: str):
     try:
         conn = psycopg2.connect(
             host=settings.db_host,
@@ -114,8 +118,8 @@ def create_table():
 
         cursor.execute("CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;")
 
-        create_table_query = """
-        CREATE TABLE IF NOT EXISTS aqicn_measurements (
+        create_table_query = f"""
+        CREATE TABLE IF NOT EXISTS {city}_measurements (
             id SERIAL,
             city TEXT,
             station_id INTEGER,
@@ -139,16 +143,16 @@ def create_table():
         cursor.execute(create_table_query)
 
         cursor.execute(
-            "SELECT EXISTS (SELECT FROM pg_tables WHERE tablename = 'aqicn_measurements' AND schemaname = 'public');"
+            f"SELECT EXISTS (SELECT FROM pg_tables WHERE tablename = '{city}_measurements' AND schemaname = 'public');"
         )
         table_exists = cursor.fetchone()[0]
 
         if table_exists:
             cursor.execute(
-                """
+                f"""
                 SELECT EXISTS (
                     SELECT 1 FROM timescaledb_information.hypertables
-                    WHERE hypertable_name = 'aqicn_measurements'
+                    WHERE hypertable_name = '{city}_measurements'
                 );
                 """
             )
@@ -156,9 +160,9 @@ def create_table():
 
             if not is_hypertable:
                 cursor.execute(
-                    "SELECT create_hypertable('aqicn_measurements', 'processed_time', if_not_exists => TRUE);"
+                    f"SELECT create_hypertable('{city}_measurements', 'processed_time', if_not_exists => TRUE);"
                 )
-                logger.info("Created hypertable for aqicn_measurements")
+                logger.info(f"Created hypertable for {city}_measurements")
 
         cursor.close()
         conn.close()
@@ -169,7 +173,7 @@ def create_table():
         raise
 
 
-def write_to_postgres(batch_df: DataFrame, batch_id: int):
+def write_to_postgres(batch_df: DataFrame, batch_id: int, city: str):
     if batch_df.isEmpty():
         return
 
@@ -181,32 +185,35 @@ def write_to_postgres(batch_df: DataFrame, batch_id: int):
     }
 
     batch_df.write \
-        .jdbc(url=jdbc_url, table="aqicn_measurements", mode="append", properties=connection_properties)
+        .jdbc(url=jdbc_url, table=f"{city}_measurements", mode="append", properties=connection_properties)
 
     logger.info(f"Batch {batch_id}: Wrote {batch_df.count()} records to PostgreSQL")
 
 
-def write_to_database(df: DataFrame):
+def write_to_database(df: DataFrame, city: str):
+    def write_batch(batch_df: DataFrame, batch_id: int):
+        write_to_postgres(batch_df, batch_id, city)
+
     query = df.writeStream \
         .outputMode("append") \
-        .foreachBatch(write_to_postgres) \
+        .foreachBatch(write_batch) \
         .trigger(processingTime="10 seconds") \
         .start()
 
     return query
 
 
-def main():
-    logger.info("Starting AQICN Spark Streaming job")
+def main(city: str):
+    logger.info("Starting AQICN Spark Streaming job for %s", city.upper())
 
-    create_table()
+    create_table(city)
 
     spark = get_spark_session()
     schema = define_schema()
-    df_raw = read_from_kafka(spark)
+    df_raw = read_from_kafka(spark, city)
     df_parsed = parse_data(df_raw, schema)
 
-    query = write_to_database(df_parsed)
+    query = write_to_database(df_parsed, city)
 
     try:
         query.awaitTermination()
@@ -214,7 +221,3 @@ def main():
         logger.info("Stopping AQICN streaming job")
         query.stop()
         spark.stop()
-
-
-if __name__ == "__main__":
-    main()

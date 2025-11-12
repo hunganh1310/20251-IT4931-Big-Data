@@ -6,7 +6,7 @@ current_dir = os.getcwd()
 
 sys.path.append(current_dir)
 
-from src.processing.cold_storage_openaq import main
+from src.processing.spark_cold_storage import main
 
 
 if __name__ == "__main__":
