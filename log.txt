@@ -5,3 +5,4 @@ Clean up unused components
 Adjust API integration
 Fix minor UI issues
 Optimize build configuration
+Improve error handling flow
