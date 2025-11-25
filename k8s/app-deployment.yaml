@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airquality-app
+  namespace: airquality
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airquality-app
+  template:
+    metadata:
+      labels:
+        app: airquality-app
+    spec:
+      containers:
+      - name: airquality-app
+        image: airquality-app:latest
+        imagePullPolicy: Never  # Assumes local build
+        envFrom:
+        - configMapRef:
+            name: airquality-config
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"

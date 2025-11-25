@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: airquality-config
+  namespace: airquality
+data:
+  # Kafka
+  KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092"
+  KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092"
+  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT"
+  KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+  KAFKA_BROKER_ID: "1"
+  KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"
+  
+  # Schema Registry
+  SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka:9092"
+  SCHEMA_REGISTRY_HOST_NAME: "schema-registry"
+  SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
+
+  # Database (TimescaleDB)
+  DB_HOST: "timescaledb"
+  DB_PORT: "5432"
+  DB_NAME: "airquality"
+  DB_USER: "airquality"
+  # DB_PASSWORD should be in a Secret, but putting here for simplicity as per plan
+  DB_PASSWORD: "airquality123"
+  POSTGRES_USER: "airquality"
+  POSTGRES_PASSWORD: "airquality123"
+  POSTGRES_DB: "airquality"
+
+  # MinIO
+  MINIO_ENDPOINT: "minio:9000"
+  MINIO_ROOT_USER: "minioadmin"
+  MINIO_ROOT_PASSWORD: "minioadmin"
+  MINIO_BUCKET: "airquality"
+
+  # App
+  AQICN_TOPIC: "raw.airquality"
+  # AQICN_TOKEN needs to be set manually or via Secret
+  AQICN_TOKEN: "your_token_here"
+  SPARK_CHECKPOINT_LOCATION: "/tmp/spark_checkpoints"
