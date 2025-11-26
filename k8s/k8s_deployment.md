@@ -47,12 +47,19 @@ Apply the manifests in the `k8s` directory.
 # Create Namespace
 kubectl apply -f k8s/namespace.yaml
 
-# Apply ConfigMap
+# Apply ConfigMap and Secrets
 kubectl apply -f k8s/configmap.yaml
+kubectl apply -f k8s/secrets.yaml
 
-# Apply Infrastructure Services
+# Apply Infrastructure Services (order matters!)
 kubectl apply -f k8s/zookeeper.yaml
+# Wait for Zookeeper to be ready
+kubectl wait --for=condition=ready pod -l app=zookeeper -n airquality --timeout=120s
+
 kubectl apply -f k8s/kafka.yaml
+# Wait for Kafka to be ready
+kubectl wait --for=condition=ready pod -l app=kafka -n airquality --timeout=120s
+
 kubectl apply -f k8s/schema-registry.yaml
 kubectl apply -f k8s/timescaledb.yaml
 kubectl apply -f k8s/minio.yaml

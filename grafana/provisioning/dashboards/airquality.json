@@ -1,0 +1,953 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 500,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "#00e400", "value": 0 },
+              { "color": "#ffff00", "value": 51 },
+              { "color": "#ff7e00", "value": 101 },
+              { "color": "#ff0000", "value": 151 },
+              { "color": "#8f3f97", "value": 201 },
+              { "color": "#7e0023", "value": 301 }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 6, "w": 4, "x": 0, "y": 0 },
+      "id": 1,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${datasource}" },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT hanoi_aqi as \"AQI\" FROM city_comparison WHERE hanoi_aqi IS NOT NULL ORDER BY processed_time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Hanoi AQI",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "max": 500,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "#00e400", "value": 0 },
+              { "color": "#ffff00", "value": 51 },
+              { "color": "#ff7e00", "value": 101 },
+              { "color": "#ff0000", "value": 151 },
+              { "color": "#8f3f97", "value": 201 },
+              { "color": "#7e0023", "value": 301 }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 6, "w": 4, "x": 4, "y": 0 },
+      "id": 2,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${datasource}" },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT saigon_aqi as \"AQI\" FROM city_comparison WHERE saigon_aqi IS NOT NULL ORDER BY processed_time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Saigon AQI",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "max": 500,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "#00e400", "value": 0 },
+              { "color": "#ffff00", "value": 51 },
+              { "color": "#ff7e00", "value": 101 },
+              { "color": "#ff0000", "value": 151 },
+              { "color": "#8f3f97", "value": 201 },
+              { "color": "#7e0023", "value": 301 }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 6, "w": 4, "x": 8, "y": 0 },
+      "id": 3,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${datasource}" },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT danang_aqi as \"AQI\" FROM city_comparison WHERE danang_aqi IS NOT NULL ORDER BY processed_time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Da Nang AQI",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "max": 500,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "#00e400", "value": 0 },
+              { "color": "#ffff00", "value": 51 },
+              { "color": "#ff7e00", "value": 101 },
+              { "color": "#ff0000", "value": 151 },
+              { "color": "#8f3f97", "value": 201 },
+              { "color": "#7e0023", "value": 301 }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 6, "w": 4, "x": 12, "y": 0 },
+      "id": 4,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${datasource}" },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT haiphong_aqi as \"AQI\" FROM city_comparison WHERE haiphong_aqi IS NOT NULL ORDER BY processed_time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Hai Phong AQI",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "max": 500,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "#00e400", "value": 0 },
+              { "color": "#ffff00", "value": 51 },
+              { "color": "#ff7e00", "value": 101 },
+              { "color": "#ff0000", "value": 151 },
+              { "color": "#8f3f97", "value": 201 },
+              { "color": "#7e0023", "value": 301 }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 6, "w": 4, "x": 16, "y": 0 },
+      "id": 5,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${datasource}" },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT cantho_aqi as \"AQI\" FROM city_comparison WHERE cantho_aqi IS NOT NULL ORDER BY processed_time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Can Tho AQI",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "max": 500,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "#00e400", "value": 0 },
+              { "color": "#ffff00", "value": 51 },
+              { "color": "#ff7e00", "value": 101 },
+              { "color": "#ff0000", "value": 151 },
+              { "color": "#8f3f97", "value": 201 },
+              { "color": "#7e0023", "value": 301 }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 6, "w": 4, "x": 20, "y": 0 },
+      "id": 6,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${datasource}" },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT nhatrang_aqi as \"AQI\" FROM city_comparison WHERE nhatrang_aqi IS NOT NULL ORDER BY processed_time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Nha Trang AQI",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "AQI",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": { "type": "linear" },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": { "mode": "off" }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 150 }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Hanoi" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "#E02F44", "mode": "fixed" } }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Saigon" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "#FF9830", "mode": "fixed" } }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Da Nang" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "#73BF69", "mode": "fixed" } }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Hai Phong" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "#5794F2", "mode": "fixed" } }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Can Tho" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "#B877D9", "mode": "fixed" } }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Nha Trang" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "#F2CC0C", "mode": "fixed" } }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Vung Tau" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "#8AB8FF", "mode": "fixed" } }]
+          }
+        ]
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 6 },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": ["mean", "max", "min", "lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${datasource}" },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT processed_time as time, hanoi_aqi as \"Hanoi\", saigon_aqi as \"Saigon\", danang_aqi as \"Da Nang\", haiphong_aqi as \"Hai Phong\", cantho_aqi as \"Can Tho\", nhatrang_aqi as \"Nha Trang\", vungtau_aqi as \"Vung Tau\" FROM city_comparison WHERE $__timeFilter(processed_time) ORDER BY processed_time",
+          "refId": "A"
+        }
+      ],
+      "title": "AQI Comparison - All Cities",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "PM2.5 (µg/m³)",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": { "type": "linear" },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": { "mode": "line" }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "#EAB839", "value": 35 },
+              { "color": "red", "value": 75 }
+            ]
+          },
+          "unit": "µg/m³"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": ["mean", "max", "lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${datasource}" },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT processed_time as time, hanoi_pm25 as \"Hanoi\", saigon_pm25 as \"Saigon\", danang_pm25 as \"Da Nang\", haiphong_pm25 as \"Hai Phong\", cantho_pm25 as \"Can Tho\", nhatrang_pm25 as \"Nha Trang\", vungtau_pm25 as \"Vung Tau\" FROM city_comparison WHERE $__timeFilter(processed_time) ORDER BY processed_time",
+          "refId": "A"
+        }
+      ],
+      "title": "PM2.5 Levels - All Cities",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "PM10 (µg/m³)",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": { "type": "linear" },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": { "mode": "line" }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "#EAB839", "value": 50 },
+              { "color": "red", "value": 100 }
+            ]
+          },
+          "unit": "µg/m³"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": ["mean", "max", "lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${datasource}" },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT processed_time as time, hanoi_pm10 as \"Hanoi\", saigon_pm10 as \"Saigon\", danang_pm10 as \"Da Nang\", haiphong_pm10 as \"Hai Phong\", cantho_pm10 as \"Can Tho\", nhatrang_pm10 as \"Nha Trang\", vungtau_pm10 as \"Vung Tau\" FROM city_comparison WHERE $__timeFilter(processed_time) ORDER BY processed_time",
+          "refId": "A"
+        }
+      ],
+      "title": "PM10 Levels - All Cities",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Temperature (°C)",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 5,
+            "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": { "type": "linear" },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": { "mode": "off" }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 22 },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": ["mean", "lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${datasource}" },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT processed_time as time, hanoi_temperature as \"Hanoi\", saigon_temperature as \"Saigon\", danang_temperature as \"Da Nang\", haiphong_temperature as \"Hai Phong\", cantho_temperature as \"Can Tho\", nhatrang_temperature as \"Nha Trang\", vungtau_temperature as \"Vung Tau\" FROM city_comparison WHERE $__timeFilter(processed_time) ORDER BY processed_time",
+          "refId": "A"
+        }
+      ],
+      "title": "Temperature - All Cities",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Humidity (%)",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 5,
+            "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": { "type": "linear" },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": { "mode": "off" }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 22 },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": ["mean", "lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${datasource}" },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT processed_time as time, hanoi_humidity as \"Hanoi\", saigon_humidity as \"Saigon\", danang_humidity as \"Da Nang\", haiphong_humidity as \"Hai Phong\", cantho_humidity as \"Can Tho\", nhatrang_humidity as \"Nha Trang\", vungtau_humidity as \"Vung Tau\" FROM city_comparison WHERE $__timeFilter(processed_time) ORDER BY processed_time",
+          "refId": "A"
+        }
+      ],
+      "title": "Humidity - All Cities",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "#00e400", "value": 0 },
+              { "color": "#ffff00", "value": 51 },
+              { "color": "#ff7e00", "value": 101 },
+              { "color": "#ff0000", "value": 151 },
+              { "color": "#8f3f97", "value": 201 },
+              { "color": "#7e0023", "value": 301 }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "City" },
+            "properties": [{ "id": "custom.width", "value": 120 }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "AQI" },
+            "properties": [
+              { "id": "custom.width", "value": 80 },
+              { "id": "custom.cellOptions", "value": { "mode": "gradient", "type": "color-background" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "PM2.5" },
+            "properties": [{ "id": "custom.width", "value": 100 }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "PM10" },
+            "properties": [{ "id": "custom.width", "value": 100 }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Temp" },
+            "properties": [{ "id": "custom.width", "value": 80 }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Humidity" },
+            "properties": [{ "id": "custom.width", "value": 90 }]
+          }
+        ]
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 29 },
+      "id": 12,
+      "options": {
+        "cellHeight": "sm",
+        "footer": { "countRows": false, "fields": "", "reducer": ["sum"], "show": false },
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${datasource}" },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT 'Hanoi' as \"City\", hanoi_aqi as \"AQI\", hanoi_pm25 as \"PM2.5\", hanoi_pm10 as \"PM10\", hanoi_temperature as \"Temp\", hanoi_humidity as \"Humidity\" FROM city_comparison WHERE hanoi_aqi IS NOT NULL ORDER BY processed_time DESC LIMIT 1 UNION ALL SELECT 'Saigon', saigon_aqi, saigon_pm25, saigon_pm10, saigon_temperature, saigon_humidity FROM city_comparison WHERE saigon_aqi IS NOT NULL ORDER BY processed_time DESC LIMIT 1 UNION ALL SELECT 'Da Nang', danang_aqi, danang_pm25, danang_pm10, danang_temperature, danang_humidity FROM city_comparison WHERE danang_aqi IS NOT NULL ORDER BY processed_time DESC LIMIT 1 UNION ALL SELECT 'Hai Phong', haiphong_aqi, haiphong_pm25, haiphong_pm10, haiphong_temperature, haiphong_humidity FROM city_comparison WHERE haiphong_aqi IS NOT NULL ORDER BY processed_time DESC LIMIT 1 UNION ALL SELECT 'Can Tho', cantho_aqi, cantho_pm25, cantho_pm10, cantho_temperature, cantho_humidity FROM city_comparison WHERE cantho_aqi IS NOT NULL ORDER BY processed_time DESC LIMIT 1 UNION ALL SELECT 'Nha Trang', nhatrang_aqi, nhatrang_pm25, nhatrang_pm10, nhatrang_temperature, nhatrang_humidity FROM city_comparison WHERE nhatrang_aqi IS NOT NULL ORDER BY processed_time DESC LIMIT 1 UNION ALL SELECT 'Vung Tau', vungtau_aqi, vungtau_pm25, vungtau_pm10, vungtau_temperature, vungtau_humidity FROM city_comparison WHERE vungtau_aqi IS NOT NULL ORDER BY processed_time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Current Air Quality Summary",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "hideFrom": { "legend": false, "tooltip": false, "viz": false } },
+          "mappings": [],
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 29 },
+      "id": 13,
+      "options": {
+        "displayLabels": ["name", "value"],
+        "legend": { "displayMode": "list", "placement": "right", "showLegend": true },
+        "pieType": "donut",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${datasource}" },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT hanoi_aqi as \"Hanoi\", saigon_aqi as \"Saigon\", danang_aqi as \"Da Nang\", haiphong_aqi as \"Hai Phong\", cantho_aqi as \"Can Tho\", nhatrang_aqi as \"Nha Trang\", vungtau_aqi as \"Vung Tau\" FROM city_comparison ORDER BY processed_time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "AQI Distribution by City",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "continuous-GrYlRd" },
+          "custom": {
+            "fillOpacity": 70,
+            "lineWidth": 0,
+            "spanNulls": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "#00e400", "value": 0 },
+              { "color": "#ffff00", "value": 51 },
+              { "color": "#ff7e00", "value": 101 },
+              { "color": "#ff0000", "value": 151 },
+              { "color": "#8f3f97", "value": 201 },
+              { "color": "#7e0023", "value": 301 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 37 },
+      "id": 14,
+      "options": {
+        "calculate": false,
+        "cellGap": 2,
+        "color": { "mode": "scheme", "scheme": "RdYlGn", "reverse": true },
+        "exemplars": { "color": "rgba(255,0,255,0.7)" },
+        "filterValues": { "le": 1e-9 },
+        "legend": { "show": true },
+        "rowsFrame": { "layout": "auto" },
+        "tooltip": { "show": true, "yHistogram": false },
+        "yAxis": { "axisPlacement": "left", "reverse": false }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${datasource}" },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT processed_time as time, hanoi_aqi as \"Hanoi\", saigon_aqi as \"Saigon\", danang_aqi as \"Da Nang\", haiphong_aqi as \"Hai Phong\", cantho_aqi as \"Can Tho\", nhatrang_aqi as \"Nha Trang\", vungtau_aqi as \"Vung Tau\" FROM city_comparison WHERE $__timeFilter(processed_time) ORDER BY processed_time",
+          "refId": "A"
+        }
+      ],
+      "title": "AQI Heatmap Over Time",
+      "type": "heatmap"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [
+            { "options": { "0": { "color": "green", "index": 0, "text": "Good" } }, "type": "value" },
+            { "options": { "from": 1, "result": { "color": "green", "index": 1, "text": "Good" }, "to": 50 }, "type": "range" },
+            { "options": { "from": 51, "result": { "color": "yellow", "index": 2, "text": "Moderate" }, "to": 100 }, "type": "range" },
+            { "options": { "from": 101, "result": { "color": "orange", "index": 3, "text": "Unhealthy (Sensitive)" }, "to": 150 }, "type": "range" },
+            { "options": { "from": 151, "result": { "color": "red", "index": 4, "text": "Unhealthy" }, "to": 200 }, "type": "range" },
+            { "options": { "from": 201, "result": { "color": "purple", "index": 5, "text": "Very Unhealthy" }, "to": 300 }, "type": "range" },
+            { "options": { "from": 301, "result": { "color": "dark-red", "index": 6, "text": "Hazardous" }, "to": 500 }, "type": "range" }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 51 },
+              { "color": "orange", "value": 101 },
+              { "color": "red", "value": 151 },
+              { "color": "purple", "value": 201 },
+              { "color": "dark-red", "value": 301 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 24, "x": 0, "y": 45 },
+      "id": 15,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "value_and_name"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${datasource}" },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT hanoi_aqi as \"Hanoi\", saigon_aqi as \"Saigon\", danang_aqi as \"Da Nang\", haiphong_aqi as \"Hai Phong\", cantho_aqi as \"Can Tho\", nhatrang_aqi as \"Nha Trang\", vungtau_aqi as \"Vung Tau\" FROM city_comparison ORDER BY processed_time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "AQI Status Indicators",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "${datasource}"
+      },
+      "gridPos": { "h": 3, "w": 24, "x": 0, "y": 49 },
+      "id": 16,
+      "options": {
+        "code": { "language": "plaintext", "showLineNumbers": false, "showMiniMap": false },
+        "content": "## EPA Air Quality Index (AQI) Categories\n\n| AQI Range | Category | Health Implications |\n|-----------|----------|--------------------|\n| 0-50 | 🟢 Good | Air quality is satisfactory |\n| 51-100 | 🟡 Moderate | Acceptable; may be concern for sensitive groups |\n| 101-150 | 🟠 Unhealthy for Sensitive Groups | Health effects for sensitive groups |\n| 151-200 | 🔴 Unhealthy | Health effects for everyone |\n| 201-300 | 🟣 Very Unhealthy | Health alert; serious effects |\n| 301-500 | 🟤 Hazardous | Emergency conditions |",
+        "mode": "markdown"
+      },
+      "title": "AQI Reference Guide",
+      "type": "text"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["air-quality", "vietnam", "real-time", "streaming"],
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": false, "text": "TimescaleDB", "value": "TimescaleDB" },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "postgres",
+        "queryValue": "",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      }
+    ]
+  },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {
+    "refresh_intervals": ["5s", "10s", "30s", "1m", "5m", "15m", "30m", "1h", "2h", "1d"]
+  },
+  "timezone": "Asia/Ho_Chi_Minh",
+  "title": "Vietnam Air Quality Dashboard",
+  "uid": "vietnam-air-quality",
+  "version": 1,
+  "weekStart": "monday"
+}

@@ -37,6 +37,31 @@ spec:
         envFrom:
         - configMapRef:
             name: airquality-config
+        - secretRef:
+            name: airquality-secrets
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - airquality
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - airquality
+          initialDelaySeconds: 30
+          periodSeconds: 20
         volumeMounts:
         - name: timescale-data
           mountPath: /var/lib/postgresql/data
