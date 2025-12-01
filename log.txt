@@ -6,3 +6,4 @@ Adjust API integration
 Fix minor UI issues
 Optimize build configuration
 Improve error handling flow
+Update documentation notes
