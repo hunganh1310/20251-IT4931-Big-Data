@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: archive-hanoi
+  namespace: airquality
+  labels:
+    app: archive
+    city: hanoi
+    component: streaming
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: archive
+      city: hanoi
+  template:
+    metadata:
+      labels:
+        app: archive
+        city: hanoi
+        component: streaming
+    spec:
+      containers:
+      - name: archive
+        image: vietnoy/airquality:latest
+        imagePullPolicy: Always
+        command: ["python3", "scripts/run_archive_hanoi.py"]
+        envFrom:
+        - secretRef:
+            name: airquality-secrets
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "100m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        volumeMounts:
+        - name: spark-checkpoints
+          mountPath: /tmp/spark_checkpoints
+      volumes:
+      - name: spark-checkpoints
+        emptyDir: {}
+      restartPolicy: Always

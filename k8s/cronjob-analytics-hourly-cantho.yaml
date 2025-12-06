@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: analytics-hourly-cantho
+  namespace: airquality
+  labels:
+    app: analytics-hourly
+    city: cantho
+    component: batch
+spec:
+
+  schedule: "5 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        metadata:
+          labels:
+            app: analytics-hourly
+            city: cantho
+            component: batch
+        spec:
+          containers:
+          - name: analytics-hourly
+            image: vietnoy/airquality:latest
+            imagePullPolicy: Always
+            command: ["python3", "scripts/run_analytics_hourly_cantho.py"]
+            envFrom:
+            - secretRef:
+                name: airquality-secrets
+            resources:
+              requests:
+                memory: "512Mi"
+                cpu: "250m"
+              limits:
+                memory: "2Gi"
+                cpu: "1000m"
+            volumeMounts:
+            - name: spark-checkpoints
+              mountPath: /tmp/spark_checkpoints
+          volumes:
+          - name: spark-checkpoints
+            emptyDir: {}
+          restartPolicy: OnFailure

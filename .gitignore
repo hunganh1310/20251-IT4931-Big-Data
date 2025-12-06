@@ -207,4 +207,8 @@ marimo/_lsp/
 __marimo__/
 
 .vscode/
-# Add
+# Spark checkpoints
+tmp/
+
+# Kubernetes secrets (contains sensitive credentials)
+k8s/secret-real.yaml
