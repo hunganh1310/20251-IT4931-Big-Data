@@ -18,7 +18,7 @@ if __name__ == "__main__":
                 logger.info("Calling AQICN API for %s", city.upper())
                 main(city=city)
                 logger.info("Sleeping for 10 seconds")
-                time.sleep(10)
+                time.sleep(300)
             except Exception as e:
                 logger.error(f"Error in producer loop: {e}")
                 time.sleep(10)

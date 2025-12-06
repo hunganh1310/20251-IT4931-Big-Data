@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: realtime-hanoi
+  namespace: airquality
+  labels:
+    app: realtime
+    city: hanoi
+    component: streaming
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: realtime
+      city: hanoi
+  template:
+    metadata:
+      labels:
+        app: realtime
+        city: hanoi
+        component: streaming
+    spec:
+      containers:
+      - name: realtime
+        image: vietnoy/airquality:latest
+        imagePullPolicy: Always
+        command: ["python3", "scripts/run_realtime_hanoi.py"]
+        envFrom:
+        - secretRef:
+            name: airquality-secrets
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        startupProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - "exit 0"
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          failureThreshold: 30
+        volumeMounts:
+        - name: spark-checkpoints
+          mountPath: /tmp/spark_checkpoints
+      volumes:
+      - name: spark-checkpoints
+        emptyDir: {}
+      restartPolicy: Always

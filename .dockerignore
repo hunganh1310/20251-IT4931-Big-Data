@@ -1,0 +1,52 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+.env.bak
+.env.local
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific - local runtime data only
+tmp/
+*.log
+
+# Documentation (not needed at runtime)
+README.md
+LICENSE
+project_docs.pdf
+presentation.tex
+img/
+
+# Docker files
+docker-compose.yaml
+Dockerfile
+.dockerignore
+
+# Testing
+pytest_cache/
+.coverage
+htmlcov/
+
+# Note: data/ is INCLUDED because it contains city_metadata.json
