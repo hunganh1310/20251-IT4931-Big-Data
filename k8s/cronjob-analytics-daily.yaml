@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: analytics-daily
+  namespace: airquality
+  labels:
+    app: analytics-daily
+    component: batch
+spec:
+
+  schedule: "30 17 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 7
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        metadata:
+          labels:
+            app: analytics-daily
+            component: batch
+        spec:
+          containers:
+          - name: analytics-daily
+            image: vietnoy/airquality:latest
+            imagePullPolicy: Always
+            command: ["python3", "scripts/run_analytics_daily.py"]
+            envFrom:
+            - secretRef:
+                name: airquality-secrets
+            resources:
+              requests:
+                memory: "1Gi"
+                cpu: "500m"
+              limits:
+                memory: "4Gi"
+                cpu: "2000m"
+            volumeMounts:
+            - name: spark-checkpoints
+              mountPath: /tmp/spark_checkpoints
+          volumes:
+          - name: spark-checkpoints
+            emptyDir: {}
+          restartPolicy: OnFailure

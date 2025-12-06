@@ -207,6 +207,9 @@ marimo/_lsp/
 __marimo__/
 
 .vscode/
-test/
 
-pytest.ini
+# Spark checkpoints
+tmp/
+
+# Kubernetes secrets (contains sensitive credentials)
+k8s/secret-real.yaml

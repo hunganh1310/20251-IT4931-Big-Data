@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: airquality
+  labels:
+    name: airquality
+    environment: production
