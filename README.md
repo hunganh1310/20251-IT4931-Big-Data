@@ -25,53 +25,37 @@ Hệ thống giám sát và dự báo chất lượng không khí thời gian th
 ```
 .
 ├── data/
-│   └── city_metadata.json
+│   └── city_metadata.json          # Metadata mô tả thông tin từng thành phố
 
 ├── img/
-│   └── architecture.png
+│   └── architecture.png            # Sơ đồ kiến trúc hệ thống (Kappa Architecture)
 
-├── k8s/
+├── k8s/                            # Kubernetes manifests để triển khai hệ thống
 │   ├── cronjob-analytics-daily.yaml
-│   ├── cronjob-analytics-hourly-canth...
-│   ├── cronjob-analytics-hourly-danang.yaml
-│   ├── cronjob-analytics-hourly-hanoi.yaml
-│   ├── deploy-to-eks.sh
-│   ├── deployment-archive-cantho.yaml
-│   ├── deployment-archive-danang.yaml
-│   ├── deployment-archive-hanoi.yaml
-│   ├── deployment-realtime-cantho.yaml
-│   ├── deployment-realtime-danang.yaml
-│   ├── deployment-realtime-hanoi.yaml
+│   ├── cronjob-analytics-hourly-*.yaml
+│   ├── deployment-archive-*.yaml
+│   ├── deployment-realtime-*.yaml
+│   ├── deploy-to-eks.sh            # Script deploy lên Amazon EKS
 │   └── namespace.yaml
 
-├── scripts/
-│   ├── produce_cantho.py
-│   ├── produce_danang.py
-│   ├── produce_hanoi.py
+├── scripts/                        # Các entrypoint chạy pipeline
+│   ├── produce_*.py                # Producer cho từng thành phố
 │   ├── run_analytics_daily.py
-│   ├── run_analytics_hourly_cantho.py
-│   ├── run_analytics_hourly_danang.py
-│   ├── run_analytics_hourly_hanoi.py
-│   ├── run_archive_cantho.py
-│   ├── run_archive_danang.py
-│   ├── run_archive_hanoi.py
-│   ├── run_realtime_cantho.py
-│   ├── run_realtime_danang.py
-│   └── run_realtime_hanoi.py
+│   ├── run_analytics_hourly_*.py
+│   ├── run_archive_*.py
+│   └── run_realtime_*.py
 
 ├── src/
 │   ├── common/
-│   │   ├── config.py
+│   │   ├── config.py               # Load config, logger, env
 │   │   └── __init__.py
 │   │
-│   ├── ingestion/
-│   │   ├── __init__.py
+│   ├── ingestion/                  # Thành phần lấy & đưa dữ liệu vào hệ thống
 │   │   ├── api_client.py
 │   │   ├── produce_city.py
-│   │   └── producer.py
+│   │   └── producer.py             # Kafka producer abstraction
 │   │
-│   └── processing/
-│       ├── __init__.py
+│   └── processing/                 # Data processing layer
 │       ├── analytics_daily.py
 │       ├── analytics_hourly.py
 │       └── archive.py
@@ -82,7 +66,8 @@ Hệ thống giám sát và dự báo chất lượng không khí thời gian th
 ├── Dockerfile
 ├── LICENSE
 ├── README.md
-├── docker-compose.yaml
-└── requirements.txt
+├── docker-compose.yaml             # Local development environment
+└── requirements.txt                # Python dependencies
+
 
 ```
