@@ -1,8 +1,8 @@
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.functions import (
-    from_json, col, current_timestamp, to_timestamp, udf, broadcast
+    from_json, col, current_timestamp, expr, udf, broadcast
 )
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType, LongType
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType, ArrayType
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import os
@@ -49,10 +49,7 @@ def define_schema() -> StructType:
             ]), True),
             StructField("city", StructType([
                 StructField("name", StringType(), True),
-                StructField("geo", StructType([
-                    StructField("0", DoubleType(), True),
-                    StructField("1", DoubleType(), True)
-                ]), True)
+                StructField("geo", ArrayType(DoubleType()), True)
             ]), True)
         ]), True)
     ])
@@ -104,7 +101,7 @@ def pollution_severity_udf(pm25, pm10):
         return "Severe"
 
 
-def add_advanced_features(df: DataFrame, city: str) -> DataFrame:
+def add_advanced_features(df: DataFrame) -> DataFrame:
     df_enriched = df.withColumn("health_status", health_category_udf(col("aqi"))) \
         .withColumn("pollution_level", pollution_severity_udf(col("pm25"), col("pm10")))
 
@@ -146,11 +143,10 @@ def parse_data(df_raw: DataFrame, schema: StructType) -> DataFrame:
         col("data.payload.iaqi.pm10.v").alias("pm10"),
         col("data.payload.iaqi.t.v").alias("temperature"),
         col("data.payload.iaqi.h.v").alias("humidity"),
-        to_timestamp(col("data.payload.time.s"), "yyyy-MM-dd HH:mm:ss").alias("measurement_time"),
+        (col("kafka_timestamp") + expr("INTERVAL 7 HOURS")).alias("measurement_time"),
         col("data.payload.city.name").alias("station_name"),
-        col("data.payload.city.geo.0").alias("latitude"),
-        col("data.payload.city.geo.1").alias("longitude"),
-        col("kafka_timestamp"),
+        col("data.payload.city.geo")[0].alias("latitude"),
+        col("data.payload.city.geo")[1].alias("longitude"),
         current_timestamp().alias("processed_time")
     )
 
@@ -186,7 +182,6 @@ def create_table(city: str):
             latitude DOUBLE PRECISION,
             longitude DOUBLE PRECISION,
             measurement_time TIMESTAMP,
-            kafka_timestamp TIMESTAMP,
             processed_time TIMESTAMP NOT NULL,
             health_status TEXT,
             pollution_level TEXT,
@@ -278,7 +273,7 @@ def main(city: str):
 
     df_raw = read_from_kafka(spark, city)
     df_parsed = parse_data(df_raw, schema)
-    df_enriched = add_advanced_features(df_parsed, city)
+    df_enriched = add_advanced_features(df_parsed)
 
     df_with_metadata = df_enriched.join(
         broadcast(city_metadata),
