@@ -1,0 +1,346 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\title{Real-Time Air Quality Monitoring System}
+\subtitle{Big Data Pipeline with Kafka, Spark, and Multi-Database Architecture}
+\author{IT4931 - Big Data}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Project Overview}
+\begin{itemize}
+    \item \textbf{Objective}: Build a scalable real-time air quality monitoring system for 7 Vietnamese cities
+    \item \textbf{Data Source}: AQICN API (Air Quality Index Network)
+    \item \textbf{Cities}: Hanoi, Ho Chi Minh City, Da Nang, Hai Phong, Can Tho, Nha Trang, Vung Tau
+    \item \textbf{Update Frequency}: Every 5 minutes from cloud producers
+    \item \textbf{Architecture}: Kappa
+\end{itemize}
+\end{frame}
+
+\begin{frame}{System Architecture}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{img/bigdata.drawio.png}
+\end{center}
+\end{frame}
+
+\begin{frame}{Technology Stack}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Data Ingestion:}
+\begin{itemize}
+    \item Kafka (Confluent Cloud)
+    \item Python Producers
+\end{itemize}
+
+\textbf{Stream Processing:}
+\begin{itemize}
+    \item Apache Spark 3.5.0
+    \item PySpark Structured Streaming
+    \item Micro-batch (10 min trigger)
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Storage:}
+\begin{itemize}
+    \item TimescaleDB (Time-series)
+    \item ClickHouse (Analytics)
+    \item MinIO (Object Storage)
+\end{itemize}
+
+\textbf{Visualization:}
+\begin{itemize}
+    \item Grafana
+    \item PostgreSQL \& ClickHouse plugins
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Data Pipeline Components}
+\textbf{1. Data Producers (DigitalOcean VM)}
+\begin{itemize}
+    \item 3 independent Python scripts (one per city)
+    \item Fetch data from AQICN API every 5 minutes
+    \item Publish to dedicated Kafka topics: \texttt{raw.airquality.<city>}
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{2. Realtime Processing (Spark Streaming)}
+\begin{itemize}
+    \item Consumes from Kafka topics
+    \item Enriches data with city metadata (population, region, thresholds)
+    \item Calculates health status and pollution level
+    \item Writes to TimescaleDB hypertables (partitioned by time)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Data Pipeline Components (cont.)}
+\textbf{3. Archive Processing (Spark Streaming)}
+\begin{itemize}
+    \item Archives raw Kafka messages to MinIO
+    \item Parquet format with Snappy compression
+    \item Partitioned by date for compliance and replay
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{4. Batch Analytics (Spark)}
+\begin{itemize}
+    \item Hourly aggregations: Reads from TimescaleDB, writes to ClickHouse
+    \item Daily aggregations: Summarizes hourly data
+    \item AQI prediction: ML model using Linear Regression
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Database Design - TimescaleDB}
+\textbf{Schema}: \texttt{<city>\_measurements}
+\begin{itemize}
+    \item \textbf{Purpose}: Store real-time sensor measurements
+    \item \textbf{Partitioning}: Hypertable partitioned by \texttt{processed\_time}
+    \item \textbf{Columns}: AQI, PM2.5, PM10, temperature, humidity, location
+    \item \textbf{Enriched Fields}: health\_status, pollution\_level, city\_metadata
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Key Features}:
+\begin{itemize}
+    \item Automatic time-based partitioning
+    \item Optimized for time-series queries
+    \item PostgreSQL compatibility
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Database Design - ClickHouse}
+\textbf{Schema}: \texttt{hourly\_aggregates}, \texttt{daily\_aggregates}
+
+\begin{itemize}
+    \item \textbf{Purpose}: Fast analytical queries for dashboards
+    \item \textbf{Engine}: MergeTree
+    \item \textbf{Ordering}: (city, hour\_start)
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Aggregated Metrics}:
+\begin{itemize}
+    \item AQI: avg, max, min, stddev
+    \item PM2.5 \& PM10: avg, max, min
+    \item Temperature \& Humidity: avg
+    \item Record count per hour/day
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Deployment Configuration}
+\textbf{Cloud Services}:
+\begin{itemize}
+    \item \textbf{Kafka}: Confluent Cloud
+    \item \textbf{Producers}: DigitalOcean VM
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Local Services (Docker)}:
+\begin{itemize}
+    \item TimescaleDB: Port 5432
+    \item ClickHouse: Port 8123 (HTTP), 9003 (Native)
+    \item MinIO: 4-node cluster, Port 9000 (API), 9001 (Console)
+    \item Grafana: Port 3000
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Processing Jobs}:
+\begin{itemize}
+    \item 3 realtime streaming jobs (one per city)
+    \item 3 archive streaming jobs
+    \item 3 hourly analytics jobs
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Data Flow Example}
+\textbf{Realtime Processing Pipeline}:
+
+\begin{enumerate}
+    \item Producer fetches AQI data from AQICN API (every 5 min)
+    \item Data published to Kafka topic: \texttt{raw.airquality.hanoi}
+    \item Spark Streaming consumes JSON messages
+    \item Parse and validate data schema
+    \item Join with city metadata (broadcast)
+    \item Calculate derived fields:
+    \begin{itemize}
+        \item health\_status: Good/Moderate/Unhealthy/Hazardous
+        \item pollution\_level: Low/Medium/High/Severe
+    \end{itemize}
+    \item Write to TimescaleDB: \texttt{hanoi\_measurements}
+    \item Checkpoint state every 10 minutes
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Code Structure}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Source Code}:
+\begin{itemize}
+    \item \texttt{src/common/config.py}
+    \item \texttt{src/ingestion/producer.py}
+    \item \texttt{src/processing/realtime.py}
+    \item \texttt{src/processing/archive.py}
+    \item \texttt{src/processing/analytics\_hourly.py}
+    \item \texttt{src/processing/analytics\_daily.py}
+    \item \texttt{src/processing/aqi\_prediction.py}
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Run Scripts} (per city):
+\begin{itemize}
+    \item \texttt{scripts/produce\_<city>.py}
+    \item \texttt{scripts/run\_realtime\_<city>.py}
+    \item \texttt{scripts/run\_archive\_<city>.py}
+    \item \texttt{scripts/run\_analytics\_hourly\_<city>.py}
+    \item \texttt{scripts/run\_aqi\_prediction\_<city>.py}
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.3cm}
+
+\textbf{Configuration}:
+\begin{itemize}
+    \item \texttt{docker-compose.yaml}: Infrastructure services
+    \item \texttt{.env}: Credentials and endpoints
+    \item \texttt{data/city\_metadata.json}: Static reference data
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Current Status}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Completed:}
+\begin{itemize}
+    \item[\checkmark] Kafka producers (3 cities)
+    \item[\checkmark] Docker infrastructure
+    \item[\checkmark] Realtime streaming pipeline
+    \item[\checkmark] TimescaleDB integration
+    \item[\checkmark] City metadata management
+    \item[\checkmark] Per-city run scripts
+    \item[\checkmark] Archive processing (MinIO)
+    \item[\checkmark] Hourly analytics aggregation
+    \item[\checkmark] ClickHouse integration
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{In Progress:}
+\begin{itemize}
+    \item Grafana dashboards
+    \item AQI prediction models
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Planned Visualizations (Grafana)}
+\textbf{5 Dashboard Views}:
+
+\begin{enumerate}
+    \item \textbf{Real-time City Dashboard}
+    \begin{itemize}
+        \item Current AQI, PM2.5, PM10 levels
+        \item Health status indicators
+        \item 24-hour trend charts
+    \end{itemize}
+
+    \item \textbf{Historical Trends}
+    \begin{itemize}
+        \item Weekly/monthly AQI patterns
+        \item Pollution level comparisons
+    \end{itemize}
+
+    \item \textbf{City Comparison}
+    \begin{itemize}
+        \item Side-by-side metrics for all 7 cities
+        \item Regional analysis (North/Central/South)
+    \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Planned Visualizations}
+\begin{enumerate}
+    \setcounter{enumi}{3}
+    \item \textbf{AQI Predictions}
+    \begin{itemize}
+        \item ML-based forecasts (next 24 hours)
+        \item Confidence intervals
+        \item Feature importance
+    \end{itemize}
+
+    \item \textbf{Summary Statistics}
+    \begin{itemize}
+        \item Daily/weekly aggregates
+        \item Best/worst air quality rankings
+        \item Health risk alerts
+    \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Future Enhancements}
+\textbf{Short-term}:
+\begin{itemize}
+    \item Complete Grafana dashboard implementation
+    \item Deploy ML prediction models
+    \item Set up automated alerting
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Long-term}:
+\begin{itemize}
+    \item Add more cities and sensors
+    \item Implement Delta Lake for data lake
+    \item Build REST API for external access
+    \item Mobile app for public access
+    \item Integrate weather data for correlation analysis
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusion}
+\textbf{Project Achievements}:
+\begin{itemize}
+    \item Built end-to-end real-time data pipeline
+    \item Integrated 5 different technologies (Kafka, Spark, TimescaleDB, ClickHouse, MinIO)
+    \item Implemented Lambda architecture
+    \item Handled 7 cities with scalable per-city processing
+    \item Cloud-native design with local development environment
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{Technical Skills Demonstrated}:
+\begin{itemize}
+    \item Distributed stream processing
+    \item Time-series database optimization
+    \item Docker containerization
+    \item Cloud service integration
+    \item Data pipeline orchestration
+\end{itemize}
+\end{frame}
+
+\begin{frame}[standout]
+\centering
+\Huge Thank You!
+
+\end{frame}
+
+\end{document}
