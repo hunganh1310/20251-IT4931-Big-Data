@@ -38,7 +38,6 @@ RUN mkdir -p /home/spark/.ivy2/cache /home/spark/.ivy2/jars /tmp/spark_checkpoin
 
 # Set Python path
 ENV PYTHONPATH=/app
-
 # Switch back to spark user for security
 USER spark
 
