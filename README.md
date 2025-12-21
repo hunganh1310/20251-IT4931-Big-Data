@@ -214,7 +214,7 @@ python scripts/run_analytics_daily.py
 | Grafana | http://localhost:3000 | admin / admin |
 | MinIO Console | http://localhost:9001 | minioadmin / minioadmin |
 | ClickHouse HTTP | http://localhost:8123 | airquality / airquality123 |
-| TimescaleDB | localhost:5432 | airquality / airquality123 |
+| TimescaleDB | http://localhost:5432 | airquality / airquality123 |
 
 ## ☸️ Kubernetes Deployment
 
